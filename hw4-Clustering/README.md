@@ -26,6 +26,39 @@ k-means 是一個聚類 (Cluster) 的方式，依照著物以類聚去分群
 由sse來判斷哪一群誤差有點大該被分群，其效率會比原本的k-means好，原因為只要運算被分到的群  
 不用全部去運算。  
 
+### data: 
+0_random.txt 452byte  
+![0_random](http://hpdswy.ee.ncku.edu.tw/~wy/image/0_random.png)  
+1_random.txt 9KB  
+![1_random](http://hpdswy.ee.ncku.edu.tw/~wy/image/1_random.png)
+
+### File: k-means.py  
+### result: 
+0_randomRes.txt 用 k-means的結果  
+![0_randomRes.txt](http://hpdswy.ee.ncku.edu.tw/~wy/image/0_randomkmeans.png)  
+0_randomResBis.txt 用 bisecting K-means的結果  
+![0_randomResBis.txt](http://hpdswy.ee.ncku.edu.tw/~wy/image/0_randomBis.png)  
+1_randomRes.txt 用 k-means的結果  
+![1_randomRes.txt](http://hpdswy.ee.ncku.edu.tw/~wy/image/1_randomkmeans.png)  
+1_randomResBis.txt 用 bisecting K-means的結果  
+![1_randomResBis.txt](http://hpdswy.ee.ncku.edu.tw/~wy/image/1_randomBis.png)  
+### 測試 1_random.txt 在不同k情況下的分群(k-means)  
+k=2  
+![k2](http://hpdswy.ee.ncku.edu.tw/~wy/image/k2.png)  
+k=3  
+![k3](http://hpdswy.ee.ncku.edu.tw/~wy/image/k3.png)  
+k=4  
+![1_randomRes.txt](http://hpdswy.ee.ncku.edu.tw/~wy/image/1_randomkmeans.png)  
+k=5  
+![k5](http://hpdswy.ee.ncku.edu.tw/~wy/image/k5.png)  
+k=6  
+![k6](http://hpdswy.ee.ncku.edu.tw/~wy/image/k6.png)  
+k=7  
+![k7](http://hpdswy.ee.ncku.edu.tw/~wy/image/k7.png)  
+
+### 感想
+k-means 和 bisecting K means 有測過時間，可是bisecting K means的時間沒有比較快，原因是因為dataset太小，有時測過倘若dataset夠大，那bisecting K means是會減少很多運算時間。  
+從圖可以清楚看到，對於1_random.txt的分群並沒有分得很好，這就是k-means的缺點 。
 ### ppt
 --------------
 [k-means](http://www.slideshare.net/ssuserf88631/k-means-42435149)  
@@ -33,3 +66,6 @@ k-means 是一個聚類 (Cluster) 的方式，依照著物以類聚去分群
 ### ipython notebook
 --------------
 [線上看ipynb](http://nbviewer.ipython.org/url/hpdswy.ee.ncku.edu.tw/~wy/ipynb/k-means.ipynb)
+### Github
+--------------
+[github](https://github.com/wy36101299/DATA-MINING-SOCIAL-NETWORK-ANALYSIS-HW/tree/master/hw4-Clustering)
