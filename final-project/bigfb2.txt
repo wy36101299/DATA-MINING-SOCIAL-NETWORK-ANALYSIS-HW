@@ -1,0 +1,11 @@
+apple-0,apple-1
+apple-0,apple-2
+apple-1,apple-2
+apple-2,apple-3
+apple-3,apple-6
+apple-3,apple-4
+apple-4,apple-5
+apple-5,apple-6
+apple-6,apple-7
+apple-7,apple-5
+apple-7,apple-3
