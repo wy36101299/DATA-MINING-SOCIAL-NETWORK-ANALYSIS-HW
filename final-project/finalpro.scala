@@ -90,7 +90,7 @@ implicit class Crossable[X](xs: Traversable[X]) {
   def cross[Y](ys: Traversable[Y]) = for { x <- xs; y <- ys } yield (x, y)
 }
 
-def tsimilarity(arg1: Iterable[String], arg2:List[(String, String)]): Array[Array[Double]] = {
+def tsimilarity(arg1: Iterable[String], arg2:List[(String, String)]): (Array[Array[Double]], List[(Int, String)]) = {
   val slength = arg1.toArray.length
   var matrix = Array.ofDim[Double](slength,slength)
 
@@ -128,11 +128,11 @@ def tsimilarity(arg1: Iterable[String], arg2:List[(String, String)]): Array[Arra
     for ( i <- 0 to slength-1){ for ( j <- 0 to slength-1){ if (j>i){ upadteMatrix(j)(i) = upadteMatrix(i)(j)} } }
     broadcastMatrix = sc.broadcast(upadteMatrix)
   }
-  broadcastMatrix.value
+  (broadcastMatrix.value,zipVertices)
 }
 
-def dSimilarity(dclusters:Array[(Iterable[String], List[(String, String)])] ): List[Array[Array[Double]]] = {
-  var similarityList = List[Array[Array[Double]]]()
+def dSimilarity(dclusters:Array[(Iterable[String], List[(String, String)])] ): List[(Array[Array[Double]], List[(Int, String)])] = {
+  var similarityList = List[(Array[Array[Double]], List[(Int, String)])]()
   for( cluster <- dclusters) {
     val similarity = tsimilarity(cluster._1,cluster._2)
     similarityList ::= similarity
