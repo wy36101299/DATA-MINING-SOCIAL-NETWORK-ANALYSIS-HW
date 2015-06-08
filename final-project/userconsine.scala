@@ -1,7 +1,16 @@
-val data = Array(Array(4, 4, 0, 2, 2),Array(4, 0, 2, 0, 3),Array(4, 0, 0, 1, 1),Array(1, 1, 1, 2, 0),Array(2, 2, 4, 0, 0),Array(5, 0, 5, 0, 2),Array(1, 1, 1, 3, 0),Array(0, 1, 3, 0, 1))
-val parData = sc.parallelize(data)
+val r = scala.util.Random
 
-  
+val slength = 5
+var matrix = Array.ofDim[Int](slength,slength)
+
+for( i <- 0 to slength-1 ) {
+  for( j <- 0 to slength-1 ) {
+    matrix(i)(j) = r.nextInt(6)
+  }
+}
+
+// val data = Array(Array(4, 4, 0, 2, 2),Array(4, 0, 2, 0, 3),Array(4, 0, 0, 1, 1),Array(1, 1, 1, 2, 0),Array(2, 2, 4, 0, 0),Array(5, 0, 5, 0, 2),Array(1, 1, 1, 3, 0),Array(0, 1, 3, 0, 1))
+val parData = sc.parallelize(matrix)
   /*
    * This method takes 2 equal length arrays of integers 
    * It returns a double representing similarity of the 2 arrays
@@ -30,8 +39,7 @@ val parData = sc.parallelize(data)
   }
   
 
-val test = parData.cartesian(parData)
-val tmp = test.map( x => cosineSimilarity(x._1,x._2)).collect()
+val cartesianData = parData.cartesian(parData)
+val userCosSimilarity = cartesianData.map( x => cosineSimilarity(x._1,x._2)).collect()
 
-$.get('http://hpdswy.ee.ncku.edu.tw/~wy/TienYang/', function(responseText) {
-});
+

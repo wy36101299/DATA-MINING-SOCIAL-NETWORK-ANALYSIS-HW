@@ -35,6 +35,8 @@ bIdVertices = sc.broadcast(newIdVertices)
 }
 
 val dCluster = sc.parallelize(bIdVertices.value)
+// save community label propagation result
+dVerCluster.map(x => x._1+","+x._2.mkString("-")).saveAsTextFile("/Users/wy/Desktop/community")
 
 val dVerCluster = dCluster.map(x => (x._2,x._1)).groupByKey()
 
@@ -90,7 +92,7 @@ implicit class Crossable[X](xs: Traversable[X]) {
   def cross[Y](ys: Traversable[Y]) = for { x <- xs; y <- ys } yield (x, y)
 }
 
-def tsimilarity(arg1: Iterable[String], arg2:List[(String, String)]): (Array[Array[Double]], List[(Int, String)]) = {
+def simrank(arg1: Iterable[String], arg2:List[(String, String)]): (Array[Array[Double]], List[(Int, String)]) = {
   val slength = arg1.toArray.length
   var matrix = Array.ofDim[Double](slength,slength)
 
@@ -134,12 +136,42 @@ def tsimilarity(arg1: Iterable[String], arg2:List[(String, String)]): (Array[Arr
 def dSimilarity(dclusters:Array[(Iterable[String], List[(String, String)])] ): List[(Array[Array[Double]], List[(Int, String)])] = {
   var similarityList = List[(Array[Array[Double]], List[(Int, String)])]()
   for( cluster <- dclusters) {
-    val similarity = tsimilarity(cluster._1,cluster._2)
+    val similarity = simrank(cluster._1,cluster._2)
     similarityList ::= similarity
   }
   similarityList
 }
 
 val similarityList = dSimilarity(dvertexEdges.collect())
+
+def graphSimilarity(similarity: Array[Array[Double]], zipVertices:List[(Int, String)]): List[(String,String,Double)] = {
+  val ALength = similarity.length
+  var vertex1 = "None"
+  var vertex2 = "None"
+  var graphVertexSimilarity = List[(String,String,Double)]()
+  for ( i <- 0 to ALength-1){ 
+    for ( j <- 0 to ALength-1){ 
+      if (i < j){ 
+        for( zipVertex <- zipVertices) {
+          if( i == zipVertex._1){
+            vertex1 = zipVertex._2
+          }
+          if( j == zipVertex._1){
+            vertex2 = zipVertex._2
+          }
+        }
+        graphVertexSimilarity :+= (vertex1,vertex2,similarity(i)(j))
+      } 
+    }
+  }
+  graphVertexSimilarity 
+}
+val clusterSimilarity = similarityList.flatMap(x => graphSimilarity(x._1,x._2))
+val clusterSimilarityRdd = sc.parallelize(clusterSimilarity)
+
+// save community label propagation result
+clusterSimilarityRdd.map(x => x._1+"-"+x._2+","+x._3).saveAsTextFile("/Users/wy/Desktop/csimrank")
+
+
 
 
